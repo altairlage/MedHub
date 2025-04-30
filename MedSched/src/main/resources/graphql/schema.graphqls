@@ -1,0 +1,77 @@
+input CreateUpdateAppointmentScheduleRequest {
+    id: ID
+    patientId: ID!
+    doctorId: ID!
+    appointmentDate: String!
+}
+
+type CreateUpdateAppointmentScheduleResponse {
+    id: ID!
+    patient: User!
+    doctor: User!
+    appointmentDate: String!
+    appointmentStatus: AppointmentStatus!
+}
+
+input CreateUpdateUserRequest {
+    id: ID
+    name: String!
+    surname: String!
+    userType: UserType!
+}
+
+type CreateUpdateUserResponse {
+    id: ID!
+    name: String!
+    surname: String!
+    userType: UserType!
+}
+
+type User {
+    id: ID!
+    name: String!
+    surname: String!
+    userType: UserType!
+}
+
+enum UserType {
+    DOCTOR,
+    NURSE,
+    PATIENT
+}
+
+enum AppointmentStatus {
+    CREATED,
+    CONFIRMED,
+    EDITED,
+    CANCELLED
+}
+
+type Appointment {
+    id: ID!
+    patient: User!
+    doctor: User!
+    appointmentDate: String!
+    appointmentStatus: AppointmentStatus!
+    createdAt: String!
+    lastUpdatedAt: String
+}
+
+extend type Query {
+    getAllUsers: [User!]!
+    getAllUsersByUserType(userType: UserType!): [User!]!
+    getUserById(userId: ID!): User!
+    getAllScheduledAppointmentByDate(appointmentDate: String!): [Appointment!]!
+    getAllScheduledAppointmentByPatient(patientId: ID!): [Appointment!]!
+    getAllScheduledAppointmentByDoctor(doctorId: ID!): [Appointment!]!
+    getScheduledAppointmentById(appointmentId: ID!): Appointment!
+}
+
+extend type Mutation {
+    createUser(request: CreateUpdateUserRequest!): CreateUpdateUserResponse!
+    updateUser(request: CreateUpdateUserRequest!): CreateUpdateUserResponse!
+    deleteUser(userId: ID!): CreateUpdateUserResponse
+    createAppointmentSchedule(request: CreateUpdateAppointmentScheduleRequest): CreateUpdateAppointmentScheduleResponse!
+    updateAppointmentSchedule(request: CreateUpdateAppointmentScheduleRequest): CreateUpdateAppointmentScheduleResponse!
+    cancelAppointment(appointmentId: ID!): CreateUpdateAppointmentScheduleResponse
+}
