@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import com.fiap.medsched.enums.UserType;
-
 @Getter
 @Setter
 @AllArgsConstructor
