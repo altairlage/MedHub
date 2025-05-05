@@ -1,11 +1,11 @@
-input CreateUpdateAppointmentScheduleRequest {
+input CreateUpdateAppointmentRequest {
     id: ID
     patientId: ID!
     doctorId: ID!
     appointmentDate: String!
 }
 
-type CreateUpdateAppointmentScheduleResponse {
+type CreateUpdateAppointmentResponse {
     id: ID!
     patient: User!
     doctor: User!
@@ -42,7 +42,6 @@ enum UserType {
 
 enum AppointmentStatus {
     CREATED,
-    CONFIRMED,
     EDITED,
     CANCELLED
 }
@@ -51,8 +50,8 @@ type Appointment {
     id: ID!
     patient: User!
     doctor: User!
-    appointmentDate: String!
-    appointmentStatus: AppointmentStatus!
+    date: String!
+    status: AppointmentStatus!
     createdAt: String!
     lastUpdatedAt: String
 }
@@ -71,7 +70,7 @@ extend type Mutation {
     createUser(request: CreateUpdateUserRequest!): CreateUpdateUserResponse!
     updateUser(request: CreateUpdateUserRequest!): CreateUpdateUserResponse!
     deleteUser(userId: ID!): CreateUpdateUserResponse
-    createAppointmentSchedule(request: CreateUpdateAppointmentScheduleRequest): CreateUpdateAppointmentScheduleResponse!
-    updateAppointmentSchedule(request: CreateUpdateAppointmentScheduleRequest): CreateUpdateAppointmentScheduleResponse!
-    cancelAppointment(appointmentId: ID!): CreateUpdateAppointmentScheduleResponse
+    createAppointmentSchedule(request: CreateUpdateAppointmentRequest): CreateUpdateAppointmentResponse!
+    updateAppointmentSchedule(request: CreateUpdateAppointmentRequest): CreateUpdateAppointmentResponse!
+    cancelAppointment(appointmentId: ID!): CreateUpdateAppointmentResponse
 }
