@@ -49,7 +49,7 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @GetMapping("/{userType}")
+    @GetMapping("/type/{userType}")
     @QueryMapping
     public List<UserModel> getAllUsersByUserType(@PathVariable String userType) {
         return userService.getAllUsersByUserType(userType);
