@@ -3,9 +3,9 @@ package com.fiap.medsched.repositories.implementations;
 import com.fiap.medsched.dtos.CreateUpdateUserRequest;
 import com.fiap.medsched.dtos.CreateUpdateUserResponse;
 import com.fiap.medsched.entities.Users;
+import com.fiap.medsched.enums.UserType;
 import com.fiap.medsched.models.UserModel;
 import com.fiap.medsched.repositories.CustomUserRepository;
-import com.fiap.medsched.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -18,7 +18,6 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class CustomUserRepositoryImpl implements CustomUserRepository {
-    private final UserRepository userRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -41,13 +40,19 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
             throw new RuntimeException("User not found");
         }
 
+        user.setName(request.getName());
+        user.setSurname(request.getSurname());
+        user.setUserType(UserType.valueOf(request.getUserType()));
+
+        entityManager.merge(user);
+
         return new CreateUpdateUserResponse(user);
     }
 
     @Override
+    @Transactional
     public UserModel getUserById(long id){
-//        Users user = entityManager.find(Users.class, id);
-        Users user = userRepository.findById(id).orElse(null);
+        Users user = entityManager.find(Users.class, id);
 
         if (user == null) {
             throw new RuntimeException("User not found");
@@ -57,8 +62,9 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     }
 
     @Override
+    @Transactional
     public List<UserModel> getAllUsers() {
-        List<Users> userList = userRepository.findAll();
+        List<Users> userList = entityManager.createQuery("select u from Users u", Users.class).getResultList();
         List<UserModel> userModelList = new ArrayList<>();
 
         for (Users user : userList) {
