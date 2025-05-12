@@ -1,5 +1,8 @@
 package com.medhub.notifier.configuration;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.medhub.notifier.dto.ScheduleNotification;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -19,7 +22,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class KafkaConfig {
+public class KafkaConsumerConfig {
     // Configs do producer:
 
     @Bean
@@ -55,15 +58,23 @@ public class KafkaConfig {
         // grupo de consumo
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "schedule_notification_group");
 
-        // fazer o kafka confiar no pacote onde o DTO está para odeserializer poder deserializar corretamente
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-
         return props;
     }
 
     @Bean
     public ConsumerFactory<String, ScheduleNotification> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+        ObjectMapper objectMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        JsonDeserializer<ScheduleNotification> deserializer = new JsonDeserializer<>(ScheduleNotification.class, objectMapper);
+        deserializer.addTrustedPackages("*");
+
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfigs(),
+                new StringDeserializer(),
+                deserializer
+        );
     }
 
     @Bean
