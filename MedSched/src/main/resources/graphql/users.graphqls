@@ -1,0 +1,38 @@
+input CreateUpdateUserRequest {
+    id: ID
+    name: String!
+    surname: String!
+    userType: UserType!
+}
+
+type CreateUpdateUserResponse {
+    id: ID!
+    name: String!
+    surname: String!
+    userType: UserType!
+}
+
+type User {
+    id: ID!
+    name: String!
+    surname: String!
+    userType: UserType!
+}
+
+enum UserType {
+    DOCTOR,
+    NURSE,
+    PATIENT
+}
+
+extend type Query {
+    getAllUsers: [User!]!
+    getAllUsersByUserType(userType: UserType!): [User!]!
+    getUserById(userId: ID!): User!
+}
+
+extend type Mutation {
+    createUser(request: CreateUpdateUserRequest!): CreateUpdateUserResponse!
+    updateUser(request: CreateUpdateUserRequest!): CreateUpdateUserResponse!
+    deleteUser(userId: ID!): ID
+}

@@ -30,7 +30,7 @@ public class UserService {
         userRepository.deleteUser(id);
     }
 
-    public UserModel getUserById(long id) {
+    public UserModel getUserById(Long id) {
         return userRepository.getUserById(id);
     }
 

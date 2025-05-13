@@ -7,13 +7,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SchemaMapping("CreateUpdateAppointmentResponse")
 public class CreateUpdateAppointmentResponse {
-    private long id;
+    private Long id;
     private UserModel patient;
     private UserModel doctor;
     private String appointmentDate;

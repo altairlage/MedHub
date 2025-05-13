@@ -51,7 +51,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     @Override
     @Transactional
-    public UserModel getUserById(long id){
+    public UserModel getUserById(Long id){
         Users user = entityManager.find(Users.class, id);
 
         if (user == null) {

@@ -10,9 +10,9 @@ import java.util.List;
 public interface CustomAppointmentRepository {
     CreateUpdateAppointmentResponse createAppointment(AppointmentModel model);
     CreateUpdateAppointmentResponse updateAppointment(CreateUpdateAppointmentRequest request);
-    CreateUpdateAppointmentResponse cancelAppointment(long id);
+    CreateUpdateAppointmentResponse cancelAppointment(Long id);
     List<AppointmentModel> getAllAppointments();
-    List<AppointmentModel> getAppointmentsByDoctorId(long id);
-    List<AppointmentModel> getAppointmentsByPatientId(long id);
-    AppointmentModel getAppointmentById(long id);
+    List<AppointmentModel> getAppointmentsByDoctorId(Long id);
+    List<AppointmentModel> getAppointmentsByPatientId(Long id);
+    AppointmentModel getAppointmentById(Long id);
 }

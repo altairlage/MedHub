@@ -73,7 +73,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
 
     @Override
     @Transactional
-    public AppointmentModel getAppointmentById(long id){
+    public AppointmentModel getAppointmentById(Long id){
         Appointment appointment = entityManager.find(Appointment.class, id);
 
         if (appointment == null) {
@@ -89,7 +89,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
 
     @Override
     @Transactional
-    public CreateUpdateAppointmentResponse cancelAppointment(long id) {
+    public CreateUpdateAppointmentResponse cancelAppointment(Long id) {
         Appointment appointment = entityManager.find(Appointment.class, id);
 
         if (appointment == null) {
@@ -110,7 +110,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
     }
 
     @Override
-    public List<AppointmentModel> getAppointmentsByDoctorId(@PathVariable long id) {
+    public List<AppointmentModel> getAppointmentsByDoctorId(@PathVariable Long id) {
         Query query = entityManager.createQuery("select a from Appointment a where a.doctor.id = :doctor_id", Appointment.class);
         query.setParameter("doctor_id", id);
         List<Appointment> appointmentList = query.getResultList();
@@ -128,7 +128,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
     }
 
     @Override
-    public List<AppointmentModel> getAppointmentsByPatientId(@PathVariable long id) {
+    public List<AppointmentModel> getAppointmentsByPatientId(@PathVariable Long id) {
         Query query = entityManager.createQuery("select a from Appointment a where a.patient.id = :patient_id", Appointment.class);
         query.setParameter("patient_id", id);
         List<Appointment> appointmentList = query.getResultList();

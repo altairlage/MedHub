@@ -1,0 +1,44 @@
+input CreateUpdateAppointmentRequest {
+    id: ID
+    patientId: ID!
+    doctorId: ID!
+    appointmentDate: String!
+}
+
+type CreateUpdateAppointmentResponse {
+    id: ID!
+    patient: User!
+    doctor: User!
+    appointmentDate: String!
+    appointmentStatus: AppointmentStatus!
+}
+
+enum AppointmentStatus {
+    CREATED,
+    EDITED,
+    CANCELLED
+}
+
+type Appointment {
+    id: ID!
+    patient: User!
+    doctor: User!
+    date: String!
+    status: AppointmentStatus!
+    createdAt: String!
+    lastUpdatedAt: String
+}
+
+extend type Query {
+    getAllAppointments:[Appointment!]!
+    getAllScheduledAppointmentByDate(appointmentDate: String!): [Appointment!]!
+    getAllAppointmentByPatientId(patientId: ID!): [Appointment!]!
+    getAllAppointmentByDoctorId(doctorId: ID!): [Appointment!]!
+    getAppointmentById(appointmentId: ID!): Appointment!
+}
+
+extend type Mutation {
+    createAppointment(request: CreateUpdateAppointmentRequest): CreateUpdateAppointmentResponse!
+    updateAppointment(request: CreateUpdateAppointmentRequest): CreateUpdateAppointmentResponse!
+    cancelAppointment(appointmentId: ID!): CreateUpdateAppointmentResponse
+}
