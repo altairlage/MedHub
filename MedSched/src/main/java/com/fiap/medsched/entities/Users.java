@@ -25,11 +25,15 @@ public class Users {
     private String surname;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private UserType userType;
 
-    public Users(String name, String surname, UserType userType) {
+    public Users(String name, String surname, String email, UserType userType) {
         this.name = name;
         this.surname = surname;
+        this.email = email;
         this.userType = userType;
     }
 }

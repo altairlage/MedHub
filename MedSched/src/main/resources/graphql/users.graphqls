@@ -2,6 +2,7 @@ input CreateUpdateUserRequest {
     id: ID
     name: String!
     surname: String!
+    email: String!
     userType: UserType!
 }
 
@@ -9,6 +10,7 @@ type CreateUpdateUserResponse {
     id: ID!
     name: String!
     surname: String!
+    email: String!
     userType: UserType!
 }
 
@@ -16,6 +18,7 @@ type User {
     id: ID!
     name: String!
     surname: String!
+    email: String!
     userType: UserType!
 }
 

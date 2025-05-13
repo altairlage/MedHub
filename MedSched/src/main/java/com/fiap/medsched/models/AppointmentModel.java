@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppointmentModel {
+    private Long id;
+
     private UserModel patient;
 
     private UserModel doctor;
@@ -24,4 +26,13 @@ public class AppointmentModel {
     private LocalDate createdAt;
 
     private LocalDate lastUpdatedAt;
+
+    public AppointmentModel(UserModel patient, UserModel doctor, AppointmentStatus status, LocalDate appointmentDate, LocalDate createdAt, LocalDate lastUpdatedAt) {
+        this.patient = patient;
+        this.doctor = doctor;
+        this.status = status;
+        this.appointmentDate = appointmentDate;
+        this.createdAt = createdAt;
+        this.lastUpdatedAt = lastUpdatedAt;
+    }
 }

@@ -23,7 +23,7 @@ type Appointment {
     id: ID!
     patient: User!
     doctor: User!
-    date: String!
+    appointmentDate: String!
     status: AppointmentStatus!
     createdAt: String!
     lastUpdatedAt: String
