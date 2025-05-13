@@ -51,13 +51,19 @@ public class AppointmentController {
 
     @GetMapping("/patient/{id}")
     @QueryMapping
-    public List<AppointmentModel> getAppointmentByPatientId(@PathVariable long id) {
-        return appointmentService.getAppointmentByPatientId(id);
+    public List<AppointmentModel> getAppointmentsByPatientId(@PathVariable long id) {
+        return appointmentService.getAppointmentsByPatientId(id);
     }
 
     @GetMapping("/doctor/{id}")
     @QueryMapping
-    public List<AppointmentModel> getAppointmentByDoctorId(@PathVariable long id) {
-        return appointmentService.getAppointmentByDoctorId(id);
+    public List<AppointmentModel> getAppointmentsByDoctorId(@PathVariable long id) {
+        return appointmentService.getAppointmentsByDoctorId(id);
+    }
+
+    @GetMapping("/{date}")
+    @QueryMapping
+    public List<AppointmentModel> getAppointmentsByDate(@PathVariable String date) {
+        return appointmentService.getAppointmentsByDate(date);
     }
 }

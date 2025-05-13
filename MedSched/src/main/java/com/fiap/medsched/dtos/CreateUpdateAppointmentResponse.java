@@ -20,9 +20,8 @@ public class CreateUpdateAppointmentResponse {
     private AppointmentStatus appointmentStatus;
 
     public CreateUpdateAppointmentResponse(Appointment appointment) {
-        UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getUserType());
-        UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getUserType());
-
+        UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getEmail(), appointment.getDoctor().getUserType());
+        UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getEmail(), appointment.getPatient().getUserType());
 
         setId(appointment.getId());
         setDoctor(patient);

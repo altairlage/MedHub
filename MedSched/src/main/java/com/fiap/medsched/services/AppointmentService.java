@@ -50,11 +50,15 @@ public class AppointmentService {
         return appointmentRepository.cancelAppointment(id);
     }
 
-    public List<AppointmentModel> getAppointmentByDoctorId(@PathVariable long id) {
+    public List<AppointmentModel> getAppointmentsByDoctorId(@PathVariable long id) {
         return appointmentRepository.getAppointmentsByDoctorId(id);
     }
 
-    public List<AppointmentModel> getAppointmentByPatientId(@PathVariable long id) {
+    public List<AppointmentModel> getAppointmentsByPatientId(@PathVariable long id) {
         return appointmentRepository.getAppointmentsByPatientId(id);
+    }
+
+    public List<AppointmentModel> getAppointmentsByDate(@PathVariable String date) {
+        return appointmentRepository.getAppointmentsByDate(date);
     }
 }

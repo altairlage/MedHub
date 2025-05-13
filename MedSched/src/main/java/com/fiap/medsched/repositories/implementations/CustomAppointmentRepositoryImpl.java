@@ -61,8 +61,8 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         List<AppointmentModel> appointmentModelList = new ArrayList<>();
 
         for (Appointment appointment : appointmentList) {
-            UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getUserType());
-            UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getUserType());
+            UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getEmail(), appointment.getDoctor().getUserType());
+            UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getEmail(), appointment.getPatient().getUserType());
 
             appointmentModelList.add(new AppointmentModel(patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
                     appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
@@ -80,8 +80,8 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
             throw new RuntimeException("Appointment not found");
         }
 
-        UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getUserType());
-        UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getUserType());
+        UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getEmail(), appointment.getDoctor().getUserType());
+        UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getEmail(), appointment.getPatient().getUserType());
 
         return new AppointmentModel(patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
                 appointment.getCreatedAt(),appointment.getLastUpdatedAt());
@@ -100,8 +100,8 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         appointment.setLastUpdatedAt(LocalDate.now());
         entityManager.merge(appointment);
 
-        UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getUserType());
-        UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getUserType());
+        UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getEmail(), appointment.getDoctor().getUserType());
+        UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getEmail(), appointment.getPatient().getUserType());
 
         AppointmentModel appointmentModel = new AppointmentModel(patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
                 appointment.getCreatedAt(),appointment.getLastUpdatedAt());
@@ -117,8 +117,8 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         List<AppointmentModel> appointmentModelList = new ArrayList<>();
 
         for (Appointment appointment : appointmentList) {
-            UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getUserType());
-            UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getUserType());
+            UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getEmail(), appointment.getDoctor().getUserType());
+            UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getEmail(), appointment.getPatient().getUserType());
 
             appointmentModelList.add(new AppointmentModel(patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
                     appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
@@ -135,8 +135,26 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         List<AppointmentModel> appointmentModelList = new ArrayList<>();
 
         for (Appointment appointment : appointmentList) {
-            UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getUserType());
-            UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getUserType());
+            UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getEmail(), appointment.getDoctor().getUserType());
+            UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getEmail(), appointment.getPatient().getUserType());
+
+            appointmentModelList.add(new AppointmentModel(patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
+                    appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
+        }
+
+        return appointmentModelList;
+    }
+
+    @Override
+    public List<AppointmentModel> getAppointmentsByDate(String date) {
+        Query query = entityManager.createQuery("select a from Appointment a where a.appointment_date = :appointment_date", Appointment.class);
+        query.setParameter("appointment_date", date);
+        List<Appointment> appointmentList = query.getResultList();
+        List<AppointmentModel> appointmentModelList = new ArrayList<>();
+
+        for (Appointment appointment : appointmentList) {
+            UserModel doctor = new UserModel(appointment.getDoctor().getName(), appointment.getDoctor().getSurname(), appointment.getDoctor().getEmail(), appointment.getDoctor().getUserType());
+            UserModel patient = new UserModel(appointment.getPatient().getName(), appointment.getPatient().getSurname(), appointment.getPatient().getEmail(), appointment.getPatient().getUserType());
 
             appointmentModelList.add(new AppointmentModel(patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
                     appointment.getCreatedAt(),appointment.getLastUpdatedAt()));

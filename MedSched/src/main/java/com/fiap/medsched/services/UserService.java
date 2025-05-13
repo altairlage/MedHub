@@ -18,7 +18,7 @@ public class UserService {
     public CreateUpdateUserResponse createUpdateUser(CreateUpdateUserRequest request) {
         if(request.getId() == null){
             //log: CREATE USER REQUEST
-            UserModel userModel = new UserModel(request.getName(), request.getSurname(), UserType.valueOf(request.getUserType().toUpperCase()));
+            UserModel userModel = new UserModel(request.getName(), request.getSurname(), request.getEmail(), UserType.valueOf(request.getUserType().toUpperCase()));
             return userRepository.createUser(userModel);
         } else{
             //log: UPDATE USER REQUEST

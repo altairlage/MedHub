@@ -12,6 +12,7 @@ public interface CustomAppointmentRepository {
     CreateUpdateAppointmentResponse updateAppointment(CreateUpdateAppointmentRequest request);
     CreateUpdateAppointmentResponse cancelAppointment(long id);
     List<AppointmentModel> getAllAppointments();
+    List<AppointmentModel> getAppointmentsByDate(String date);
     List<AppointmentModel> getAppointmentsByDoctorId(long id);
     List<AppointmentModel> getAppointmentsByPatientId(long id);
     AppointmentModel getAppointmentById(long id);

@@ -5,6 +5,7 @@ import com.fiap.medsched.dtos.CreateUpdateUserResponse;
 import com.fiap.medsched.models.UserModel;
 import com.fiap.medsched.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
@@ -19,9 +20,9 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/create")
+//    @PostMapping("/create")
     @MutationMapping
-    public CreateUpdateUserResponse createUser(@RequestBody CreateUpdateUserRequest request){
+    public CreateUpdateUserResponse createUser(@Argument CreateUpdateUserRequest request){
         return userService.createUpdateUser(request);
     }
 
