@@ -1,5 +1,7 @@
 package com.medhub.notifier.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.medhub.notifier.dto.ScheduleNotification;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -19,7 +21,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class KafkaConfig {
+public class KafkaProducerConfig {
     // Configs do producer:
 
     @Bean
@@ -49,21 +51,27 @@ public class KafkaConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         // Para consumir todas as mensagens da fila, nao somente as mensagens criadas apos a criação do consumer
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         // grupo de consumo
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "schedule_notification_group");
-
-        // fazer o kafka confiar no pacote onde o DTO está para odeserializer poder deserializar corretamente
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
         return props;
     }
 
     @Bean
     public ConsumerFactory<String, ScheduleNotification> consumerFactory() {
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+        JsonDeserializer<ScheduleNotification> deserializer = new JsonDeserializer<>(ScheduleNotification.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(false);
+
+        return new DefaultKafkaConsumerFactory<>(
+                consumerConfigs(),
+                new StringDeserializer(),
+                deserializer
+        );
+
     }
 
     @Bean
