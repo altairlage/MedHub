@@ -24,7 +24,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     @Override
     @Transactional
     public CreateUpdateUserResponse createUser(UserModel userModel) {
-        Users user = new Users(userModel.getName(), userModel.getSurname(), userModel.getUserType());
+        Users user = new Users(userModel.getName(), userModel.getSurname(), userModel.getEmail(), userModel.getUserType());
 
         entityManager.persist(user);
 
@@ -42,6 +42,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
         user.setName(request.getName());
         user.setSurname(request.getSurname());
+        user.setEmail(request.getEmail());
         user.setUserType(UserType.valueOf(request.getUserType()));
 
         entityManager.merge(user);
@@ -51,14 +52,14 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     @Override
     @Transactional
-    public UserModel getUserById(long id){
+    public UserModel getUserById(Long id){
         Users user = entityManager.find(Users.class, id);
 
         if (user == null) {
             throw new RuntimeException("User not found");
         }
 
-        return new UserModel(user.getName(), user.getSurname(), user.getUserType());
+        return new UserModel(user);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         List<UserModel> userModelList = new ArrayList<>();
 
         for (Users user : userList) {
-            userModelList.add(new UserModel(user.getName(), user.getSurname(), user.getUserType()));
+            userModelList.add(new UserModel(user));
         }
 
         return userModelList;

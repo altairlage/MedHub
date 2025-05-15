@@ -1,7 +1,6 @@
 package com.fiap.medsched.entities;
 
 import com.fiap.medsched.enums.AppointmentStatus;
-import com.fiap.medsched.models.UserModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,9 +34,9 @@ public class Appointment {
 
     private LocalDate lastUpdatedAt;
 
-    public Appointment(UserModel patient, UserModel doctor, LocalDate appointmentDate, AppointmentStatus status, LocalDate createdAt, LocalDate lastUpdatedAt) {
-        this.patient = new Users(patient.getName(), patient.getSurname(), patient.getUserType());
-        this.doctor = new Users(doctor.getName(), doctor.getSurname(), doctor.getUserType());
+    public Appointment(Users patient, Users doctor, LocalDate appointmentDate, AppointmentStatus status, LocalDate createdAt, LocalDate lastUpdatedAt) {
+        this.patient = patient;
+        this.doctor = doctor;
         this.appointmentDate = appointmentDate;
         this.status = status;
         this.createdAt = createdAt;

@@ -18,7 +18,7 @@ public class UserService {
     public CreateUpdateUserResponse createUpdateUser(CreateUpdateUserRequest request) {
         if(request.getId() == null){
             //log: CREATE USER REQUEST
-            UserModel userModel = new UserModel(request.getName(), request.getSurname(), UserType.valueOf(request.getUserType().toUpperCase()));
+            UserModel userModel = new UserModel(request);
             return userRepository.createUser(userModel);
         } else{
             //log: UPDATE USER REQUEST
@@ -30,7 +30,7 @@ public class UserService {
         userRepository.deleteUser(id);
     }
 
-    public UserModel getUserById(long id) {
+    public UserModel getUserById(Long id) {
         return userRepository.getUserById(id);
     }
 

@@ -3,16 +3,15 @@ package com.fiap.medsched.repositories;
 import com.fiap.medsched.dtos.CreateUpdateAppointmentRequest;
 import com.fiap.medsched.dtos.CreateUpdateAppointmentResponse;
 import com.fiap.medsched.models.AppointmentModel;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 public interface CustomAppointmentRepository {
-    CreateUpdateAppointmentResponse createAppointment(AppointmentModel model);
+    CreateUpdateAppointmentResponse createAppointment(CreateUpdateAppointmentRequest request);
     CreateUpdateAppointmentResponse updateAppointment(CreateUpdateAppointmentRequest request);
-    CreateUpdateAppointmentResponse cancelAppointment(long id);
+    CreateUpdateAppointmentResponse cancelAppointment(Long id);
     List<AppointmentModel> getAllAppointments();
-    List<AppointmentModel> getAppointmentsByDoctorId(long id);
-    List<AppointmentModel> getAppointmentsByPatientId(long id);
-    AppointmentModel getAppointmentById(long id);
+    List<AppointmentModel> getAppointmentsByDoctorId(Long id);
+    List<AppointmentModel> getAppointmentsByPatientId(Long id);
+    AppointmentModel getAppointmentById(Long id);
 }

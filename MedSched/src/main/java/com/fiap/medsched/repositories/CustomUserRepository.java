@@ -9,7 +9,7 @@ import java.util.List;
 public interface CustomUserRepository {
     CreateUpdateUserResponse createUser(UserModel userModel);
     CreateUpdateUserResponse updateUser(CreateUpdateUserRequest request);
-    UserModel getUserById(long id);
+    UserModel getUserById(Long id);
     List<UserModel> getAllUsers();
     void deleteUser(Long id);
 }

@@ -4,60 +4,53 @@ import com.fiap.medsched.dtos.CreateUpdateAppointmentRequest;
 import com.fiap.medsched.dtos.CreateUpdateAppointmentResponse;
 import com.fiap.medsched.models.AppointmentModel;
 import com.fiap.medsched.services.AppointmentService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/appointment")
 @Controller
-@RequiredArgsConstructor
 public class AppointmentController {
     private final AppointmentService appointmentService;
 
-    @PostMapping("/create")
+    public AppointmentController(AppointmentService appointmentService) {
+        this.appointmentService = appointmentService;
+    }
+
     @MutationMapping
-    public CreateUpdateAppointmentResponse createAppointment(@RequestBody CreateUpdateAppointmentRequest request) {
+    public CreateUpdateAppointmentResponse createAppointment(@Argument CreateUpdateAppointmentRequest request) {
         return appointmentService.createAppointment(request);
     }
 
-    @PostMapping("/update")
     @MutationMapping
-    public CreateUpdateAppointmentResponse updateAppointment(@RequestBody CreateUpdateAppointmentRequest request) {
+    public CreateUpdateAppointmentResponse updateAppointment(@Argument CreateUpdateAppointmentRequest request) {
         return appointmentService.updateAppointment(request);
     }
 
-    @PostMapping("{id}/cancel")
     @MutationMapping
-    public CreateUpdateAppointmentResponse cancelAppointment(@PathVariable long id) {
-        return appointmentService.cancelAppointment(id);
+    public CreateUpdateAppointmentResponse cancelAppointment(@Argument Long appointmentId) {
+        return appointmentService.cancelAppointment(appointmentId);
     }
 
-    @GetMapping
     @QueryMapping
     public List<AppointmentModel> getAllAppointments() {
         return appointmentService.getAllAppointments();
     }
 
-    @GetMapping("/{id}")
     @QueryMapping
-    public AppointmentModel getAppointmentById(@PathVariable long id) {
-        return appointmentService.getAppointmentById(id);
+    public AppointmentModel getAppointmentById(@Argument Long appointmentId) {
+        return appointmentService.getAppointmentById(appointmentId);
     }
 
-    @GetMapping("/patient/{id}")
     @QueryMapping
-    public List<AppointmentModel> getAppointmentByPatientId(@PathVariable long id) {
-        return appointmentService.getAppointmentByPatientId(id);
+    public List<AppointmentModel> getAllAppointmentByPatientId(@Argument Long patientId) {
+        return appointmentService.getAppointmentByPatientId(patientId);
     }
 
-    @GetMapping("/doctor/{id}")
     @QueryMapping
-    public List<AppointmentModel> getAppointmentByDoctorId(@PathVariable long id) {
-        return appointmentService.getAppointmentByDoctorId(id);
+    public List<AppointmentModel> getAllAppointmentByDoctorId(@Argument Long doctorId) {
+        return appointmentService.getAppointmentByDoctorId(doctorId);
     }
 }

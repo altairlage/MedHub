@@ -5,20 +5,24 @@ import com.fiap.medsched.enums.UserType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@SchemaMapping("CreateUpdateUserResponse")
 public class CreateUpdateUserResponse {
     private Long id;
     private String name;
     private String surname;
+    private String email;
     private UserType userType;
 
     public CreateUpdateUserResponse(Users users) {
         this.setId(users.getId());
         this.setName(users.getName());
         this.setSurname(users.getSurname());
+        this.setEmail(users.getEmail());
         this.setUserType(users.getUserType());
     }
 }
