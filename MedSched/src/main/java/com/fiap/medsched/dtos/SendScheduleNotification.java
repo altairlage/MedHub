@@ -12,8 +12,6 @@ public record SendScheduleNotification(
         @JsonProperty("patientName") String patientName,
         @JsonProperty("patientEmail") String patientEmail,
         @JsonProperty("doctorName") String doctorName,
-        @JsonProperty("appointmentDateTime")
-//        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-        String appointmentDateTime
+        @JsonProperty("appointmentDateTime") String appointmentDateTime
 ) {
 }
