@@ -3,6 +3,7 @@ input CreateUpdateAppointmentRequest {
     patientId: ID!
     doctorId: ID!
     appointmentDate: String!
+    appointmentHour: String!
 }
 
 type CreateUpdateAppointmentResponse {
@@ -10,6 +11,7 @@ type CreateUpdateAppointmentResponse {
     patient: User!
     doctor: User!
     appointmentDate: String!
+    appointmentHour: String!
     appointmentStatus: AppointmentStatus!
 }
 
@@ -24,6 +26,7 @@ type Appointment {
     patient: User!
     doctor: User!
     appointmentDate: String!
+    appointmentHour: String!
     status: AppointmentStatus!
     createdAt: String!
     lastUpdatedAt: String

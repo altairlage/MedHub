@@ -5,6 +5,7 @@ import com.fiap.medsched.dtos.CreateUpdateAppointmentResponse;
 import com.fiap.medsched.entities.Appointment;
 import com.fiap.medsched.entities.Users;
 import com.fiap.medsched.enums.AppointmentStatus;
+import com.fiap.medsched.exceptions.MedException;
 import com.fiap.medsched.models.AppointmentModel;
 import com.fiap.medsched.models.UserModel;
 import com.fiap.medsched.repositories.CustomAppointmentRepository;
@@ -30,13 +31,13 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Users patient = entityManager.find(Users.class, request.getPatientId());
 
         if (patient == null) {
-            throw new RuntimeException("Patient not found");
+            throw new MedException("Patient not found");
         }
 
         Users doctor = entityManager.find(Users.class, request.getDoctorId());
 
         if (doctor == null) {
-            throw new RuntimeException("Doctor not found");
+            throw new MedException("Doctor not found");
         }
 
         String[] appointmentDateSplit = request.getAppointmentDate().split("/");
@@ -45,7 +46,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         int appointmentYear = Integer.parseInt(appointmentDateSplit[2]);
 
         Appointment appointment = new Appointment(patient, doctor, LocalDate.of(appointmentYear, appointmentMonth, appointmentDay),
-                AppointmentStatus.CREATED, LocalDate.now(), LocalDate.now());
+                request.getAppointmentHour(), AppointmentStatus.CREATED, LocalDate.now(), LocalDate.now());
 
         entityManager.persist(appointment);
         return new CreateUpdateAppointmentResponse(appointment);
@@ -57,7 +58,11 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Appointment appointment = entityManager.find(Appointment.class, request.getId());
 
         if (appointment == null) {
-            throw new RuntimeException("Appointment not found");
+            throw new MedException("Appointment not found");
+        }
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED){
+            throw new MedException("Appointment cancelled");
         }
 
         String[] appointmentDateSplit = request.getAppointmentDate().split("/");
@@ -70,6 +75,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         appointment.setPatient(entityManager.find(Users.class, request.getPatientId()));
         appointment.setDoctor(entityManager.find(Users.class, request.getDoctorId()));
         appointment.setAppointmentDate(appointmentDate);
+        appointment.setAppointmentHour(request.getAppointmentHour());
         appointment.setStatus(AppointmentStatus.EDITED);
         appointment.setLastUpdatedAt(LocalDate.now());
 
@@ -89,7 +95,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
             UserModel patient = new UserModel(appointment.getPatient());
 
             appointmentModelList.add(new AppointmentModel(appointment.getId(), patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
-                    appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
+                    appointment.getAppointmentHour(),appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
         }
 
         return appointmentModelList;
@@ -101,14 +107,14 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Appointment appointment = entityManager.find(Appointment.class, id);
 
         if (appointment == null) {
-            throw new RuntimeException("Appointment not found");
+            throw new MedException("Appointment not found");
         }
 
         UserModel doctor = new UserModel(appointment.getDoctor());
         UserModel patient = new UserModel(appointment.getPatient());
 
         return new AppointmentModel(appointment.getId(), patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
-                appointment.getCreatedAt(),appointment.getLastUpdatedAt());
+                appointment.getAppointmentHour(),appointment.getCreatedAt(),appointment.getLastUpdatedAt());
     }
 
     @Override
@@ -117,18 +123,16 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Appointment appointment = entityManager.find(Appointment.class, id);
 
         if (appointment == null) {
-            throw new RuntimeException("Appointment not found");
+            throw new MedException("Appointment not found");
+        }
+
+        if(appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new MedException("Appointment already cancelled");
         }
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
         appointment.setLastUpdatedAt(LocalDate.now());
         entityManager.merge(appointment);
-
-        UserModel doctor = new UserModel(appointment.getDoctor());
-        UserModel patient = new UserModel(appointment.getPatient());
-
-        AppointmentModel appointmentModel = new AppointmentModel(appointment.getId(), patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
-                appointment.getCreatedAt(),appointment.getLastUpdatedAt());
 
         return new CreateUpdateAppointmentResponse(appointment);
     }
@@ -145,7 +149,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
             UserModel patient = new UserModel(appointment.getPatient());
 
             appointmentModelList.add(new AppointmentModel(appointment.getId(), patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
-                    appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
+                    appointment.getAppointmentHour(),appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
         }
 
         return appointmentModelList;
@@ -163,7 +167,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
             UserModel patient = new UserModel(appointment.getPatient());
 
             appointmentModelList.add(new AppointmentModel(appointment.getId(), patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
-                    appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
+                    appointment.getAppointmentHour(),appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
         }
 
         return appointmentModelList;

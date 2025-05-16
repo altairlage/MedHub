@@ -16,4 +16,5 @@ public class CreateUpdateAppointmentRequest {
     private Long patientId;
     private Long doctorId;
     private String appointmentDate;
+    private String appointmentHour;
 }

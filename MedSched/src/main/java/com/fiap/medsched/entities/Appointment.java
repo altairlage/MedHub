@@ -28,16 +28,19 @@ public class Appointment {
 
     private LocalDate appointmentDate;
 
+    private String appointmentHour;
+
     private AppointmentStatus status;
 
     private LocalDate createdAt;
 
     private LocalDate lastUpdatedAt;
 
-    public Appointment(Users patient, Users doctor, LocalDate appointmentDate, AppointmentStatus status, LocalDate createdAt, LocalDate lastUpdatedAt) {
+    public Appointment(Users patient, Users doctor, LocalDate appointmentDate, String appointmentHour,AppointmentStatus status, LocalDate createdAt, LocalDate lastUpdatedAt) {
         this.patient = patient;
         this.doctor = doctor;
         this.appointmentDate = appointmentDate;
+        this.appointmentHour = appointmentHour;
         this.status = status;
         this.createdAt = createdAt;
         this.lastUpdatedAt = lastUpdatedAt;
