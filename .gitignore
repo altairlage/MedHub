@@ -26,3 +26,5 @@ replay_pid*
 MedSched/.idea/
 
 MedSched/target/
+
+.idea

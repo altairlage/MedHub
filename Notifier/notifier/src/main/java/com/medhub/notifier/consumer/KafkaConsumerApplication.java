@@ -1,8 +1,6 @@
 package com.medhub.notifier.consumer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.medhub.notifier.dto.ScheduleNotification;
+import com.medhub.notifier.dto.SendScheduleNotification;
 import com.medhub.notifier.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,7 @@ public class KafkaConsumerApplication {
     }
 
     @KafkaListener(topics = "schedule-notification", groupId = "schedule_notification_group")
-    public void consumeScheduleNotification(ScheduleNotification notification, Acknowledgment ack) {
+    public void consumeScheduleNotification(SendScheduleNotification notification, Acknowledgment ack) {
         log.info("Schedule Notification consumed: {}", notification);
 
         try {
