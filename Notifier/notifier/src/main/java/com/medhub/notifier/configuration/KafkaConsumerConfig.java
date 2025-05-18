@@ -3,7 +3,7 @@ package com.medhub.notifier.configuration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.medhub.notifier.dto.ScheduleNotification;
+import com.medhub.notifier.dto.SendScheduleNotification;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -36,12 +36,12 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, ScheduleNotification> producerFactory() {
+    public ProducerFactory<String, SendScheduleNotification> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, ScheduleNotification> kafkaTemplate() {
+    public KafkaTemplate<String, SendScheduleNotification> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
@@ -62,13 +62,14 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, ScheduleNotification> consumerFactory() {
+    public ConsumerFactory<String, SendScheduleNotification> consumerFactory() {
         ObjectMapper objectMapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        JsonDeserializer<ScheduleNotification> deserializer = new JsonDeserializer<>(ScheduleNotification.class, objectMapper);
+        JsonDeserializer<SendScheduleNotification> deserializer = new JsonDeserializer<>(SendScheduleNotification.class, objectMapper);
         deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeHeaders(false);
 
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfigs(),
@@ -78,8 +79,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ScheduleNotification> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ScheduleNotification> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, SendScheduleNotification> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, SendScheduleNotification> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
 
         // Para informar corretamente ao kafka que as mensagens foram processadas
