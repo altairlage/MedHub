@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  kafka:
+    image: apache/kafka:latest
+    container_name: medhub-kafka
+    ports:
+      - "9092:9092"
+    command: >
+      bash -c "
+        /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/kraft/server.properties &
+        sleep 10 &&
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092
+          --create --if-not-exists
+          --topic schedule-notification
+          --partitions 1
+          --replication-factor 1 &&
+        wait
+      "
+    environment:
+      KAFKA_KRAFT_BROKER_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+
+  medsched:
+    build:
+      context: ./MedSched
+    container_name: medhub-medsched
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_MAIL_HOST: smtp.mailtrap.io
+      SPRING_MAIL_PORT: 2525
+      SPRING_MAIL_USERNAME: your_mailtrap_username
+      SPRING_MAIL_PASSWORD: your_mailtrap_password
+    ports:
+      - "8080:8080"
+
+  notifier:
+    build:
+      context: ./Notifier/notifier
+    container_name: medhub-notifier
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_MAIL_HOST: smtp.mailtrap.io
+      SPRING_MAIL_PORT: 2525
+      SPRING_MAIL_USERNAME: your_mailtrap_username
+      SPRING_MAIL_PASSWORD: your_mailtrap_password
+    ports:
+      - "8081:8081"
+
+networks:
+  default:
+    name: medhub-network
