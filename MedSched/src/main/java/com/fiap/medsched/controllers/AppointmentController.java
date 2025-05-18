@@ -56,6 +56,6 @@ public class AppointmentController {
 
     @QueryMapping
     public List<AppointmentModel> getAllAppointmentByDate(@Argument String appointmentDate) {
-        return appointmentService.getAllAppointmentsByDate(appointmentDate);
+        return appointmentService.getAllAppointmentsByAppointmentDate(appointmentDate);
     }
 }
