@@ -11,7 +11,6 @@ type CreateUpdateAppointmentResponse {
     patient: User!
     doctor: User!
     appointmentDate: String!
-    appointmentHour: String!
     appointmentStatus: AppointmentStatus!
 }
 
@@ -26,7 +25,6 @@ type Appointment {
     patient: User!
     doctor: User!
     appointmentDate: String!
-    appointmentHour: String!
     status: AppointmentStatus!
     createdAt: String!
     lastUpdatedAt: String
@@ -34,7 +32,7 @@ type Appointment {
 
 extend type Query {
     getAllAppointments:[Appointment!]!
-    getAllScheduledAppointmentByDate(appointmentDate: String!): [Appointment!]!
+    getAllAppointmentByDate(appointmentDate: String!): [Appointment!]
     getAllAppointmentByPatientId(patientId: ID!): [Appointment!]!
     getAllAppointmentByDoctorId(doctorId: ID!): [Appointment!]!
     getAppointmentById(appointmentId: ID!): Appointment!

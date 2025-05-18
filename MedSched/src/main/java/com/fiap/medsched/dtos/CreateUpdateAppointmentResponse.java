@@ -19,7 +19,6 @@ public class CreateUpdateAppointmentResponse {
     private UserModel patient;
     private UserModel doctor;
     private String appointmentDate;
-    private String appointmentHour;
     private AppointmentStatus appointmentStatus;
 
     public CreateUpdateAppointmentResponse(Appointment appointment) {
@@ -31,7 +30,6 @@ public class CreateUpdateAppointmentResponse {
         setDoctor(patient);
         setPatient(doctor);
         setAppointmentDate(appointment.getAppointmentDate().toString());
-        setAppointmentHour(appointment.getAppointmentHour());
         setAppointmentStatus(appointment.getStatus());
     }
 }

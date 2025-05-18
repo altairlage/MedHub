@@ -53,4 +53,9 @@ public class AppointmentController {
     public List<AppointmentModel> getAllAppointmentByDoctorId(@Argument Long doctorId) {
         return appointmentService.getAppointmentByDoctorId(doctorId);
     }
+
+    @QueryMapping
+    public List<AppointmentModel> getAllAppointmentByDate(@Argument String appointmentDate) {
+        return appointmentService.getAllAppointmentsByDate(appointmentDate);
+    }
 }
