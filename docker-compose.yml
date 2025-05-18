@@ -26,30 +26,13 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-  kafka-2:
-    container_name: kafka-2
-    networks:
-      - app-network
-    image: confluentinc/cp-kafka:latest
-    depends_on:
-      - zookeeper
-    ports:
-      - 9093:9093
-    environment:
-      KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9093,PLAINTEXT_INTERNAL://kafka:29093
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
   medsched-service:
     build:
       context: ./MedSched
       dockerfile: Dockerfile
     container_name: MedSched-service
     ports:
-      - "8082:8082"
+      - "8082:8080"
     environment:
       SPRING_PROFILES_ACTIVE: prod
       KAFKA_BOOTSTRAP_SERVERS: localhost:9092
@@ -62,14 +45,14 @@ services:
     build:
       context: ./Notifier/notifier
       dockerfile: Dockerfile
-    container_name: notifier
+    container_name: schedule-notification
     ports:
       - "8081:8081"
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      KAFKA_BOOTSTRAP_SERVERS: localhost:9093
+      KAFKA_BOOTSTRAP_SERVERS: localhost:9092
     depends_on:
-      - kafka-2
+      - kafka-1
     networks:
       - app-network
 
