@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  medhub-kafka:
+    image: apache/kafka:latest
+    container_name: medhub-kafka
+    hostname: medhub-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://medhub-kafka:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@medhub-kafka:9093
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+
+  kafka-init:
+    image: apache/kafka:latest
+    depends_on:
+      - medhub-kafka
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      "
+      sleep 5 &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server medhub-kafka:9092 --create --if-not-exists --topic __consumer_offsets --partitions 50 --replication-factor 1 &&
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server medhub-kafka:9092 --create --if-not-exists --topic schedule-notification --partitions 1 --replication-factor 1
+      "
+
+  medsched:
+    build:
+      context: ./MedSched
+    container_name: medhub-medsched
+    depends_on:
+      - kafka-init
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: medhub-kafka:9092
+    ports:
+      - "8080:8080"
+
+  notifier:
+    build:
+      context: ./Notifier/notifier
+    container_name: medhub-notifier
+    depends_on:
+      - kafka-init
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: medhub-kafka:9092
+    ports:
+      - "8081:8081"
+
+networks:
+  default:
+    name: medhub-network
