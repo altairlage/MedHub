@@ -26,6 +26,7 @@ public class AppointmentService {
 
 //    Essa variavel sera utilizada para gerar um id para as mensagens do kafka
     private final AtomicLong idKafka = new AtomicLong(1);
+
 //    Esse metodo incrementa o id, e bem simples e fica em memoria
     public long generateId(){return idKafka.getAndIncrement();}
 
