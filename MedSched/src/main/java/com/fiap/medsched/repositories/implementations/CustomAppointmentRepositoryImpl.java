@@ -5,6 +5,7 @@ import com.fiap.medsched.dtos.CreateUpdateAppointmentResponse;
 import com.fiap.medsched.entities.Appointment;
 import com.fiap.medsched.entities.Users;
 import com.fiap.medsched.enums.AppointmentStatus;
+import com.fiap.medsched.exceptions.MedException;
 import com.fiap.medsched.models.AppointmentModel;
 import com.fiap.medsched.models.UserModel;
 import com.fiap.medsched.repositories.CustomAppointmentRepository;
@@ -13,9 +14,10 @@ import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,22 +32,26 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Users patient = entityManager.find(Users.class, request.getPatientId());
 
         if (patient == null) {
-            throw new RuntimeException("Patient not found");
+            throw new MedException("Patient not found");
         }
 
         Users doctor = entityManager.find(Users.class, request.getDoctorId());
 
         if (doctor == null) {
-            throw new RuntimeException("Doctor not found");
+            throw new MedException("Doctor not found");
         }
 
         String[] appointmentDateSplit = request.getAppointmentDate().split("/");
+        String[] appointmentHourSplit = request.getAppointmentHour().split("[Hh]");
         int appointmentDay = Integer.parseInt(appointmentDateSplit[0]);
         int appointmentMonth = Integer.parseInt(appointmentDateSplit[1]);
         int appointmentYear = Integer.parseInt(appointmentDateSplit[2]);
+        int appointmentHour = Integer.parseInt(appointmentHourSplit[0]);
+        int appointmentMinute = Integer.parseInt(appointmentHourSplit[1]);
 
-        Appointment appointment = new Appointment(patient, doctor, LocalDate.of(appointmentYear, appointmentMonth, appointmentDay),
-                AppointmentStatus.CREATED, LocalDate.now(), LocalDate.now());
+        LocalDateTime appointmentDateTime = LocalDateTime.of(appointmentYear, appointmentMonth, appointmentDay, appointmentHour, appointmentMinute);
+
+        Appointment appointment = new Appointment(patient, doctor, appointmentDateTime, AppointmentStatus.CREATED, LocalDateTime.now(), LocalDateTime.now());
 
         entityManager.persist(appointment);
         return new CreateUpdateAppointmentResponse(appointment);
@@ -57,21 +63,28 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Appointment appointment = entityManager.find(Appointment.class, request.getId());
 
         if (appointment == null) {
-            throw new RuntimeException("Appointment not found");
+            throw new MedException("Appointment not found");
+        }
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED){
+            throw new MedException("Appointment cancelled");
         }
 
         String[] appointmentDateSplit = request.getAppointmentDate().split("/");
+        String[] appointmentHourSplit = request.getAppointmentHour().split("[Hh]");
         int appointmentDay = Integer.parseInt(appointmentDateSplit[0]);
         int appointmentMonth = Integer.parseInt(appointmentDateSplit[1]);
         int appointmentYear = Integer.parseInt(appointmentDateSplit[2]);
+        int appointmentHour = Integer.parseInt(appointmentHourSplit[0]);
+        int appointmentMinute = Integer.parseInt(appointmentHourSplit[1]);
 
-        LocalDate appointmentDate = LocalDate.of(appointmentYear, appointmentMonth, appointmentDay);
+        LocalDateTime appointmentDateTime = LocalDateTime.of(appointmentYear, appointmentMonth, appointmentDay, appointmentHour, appointmentMinute);
 
         appointment.setPatient(entityManager.find(Users.class, request.getPatientId()));
         appointment.setDoctor(entityManager.find(Users.class, request.getDoctorId()));
-        appointment.setAppointmentDate(appointmentDate);
+        appointment.setAppointmentDate(appointmentDateTime);
         appointment.setStatus(AppointmentStatus.EDITED);
-        appointment.setLastUpdatedAt(LocalDate.now());
+        appointment.setLastUpdatedAt(LocalDateTime.now());
 
         entityManager.merge(appointment);
 
@@ -101,7 +114,7 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Appointment appointment = entityManager.find(Appointment.class, id);
 
         if (appointment == null) {
-            throw new RuntimeException("Appointment not found");
+            throw new MedException("Appointment not found");
         }
 
         UserModel doctor = new UserModel(appointment.getDoctor());
@@ -117,18 +130,16 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
         Appointment appointment = entityManager.find(Appointment.class, id);
 
         if (appointment == null) {
-            throw new RuntimeException("Appointment not found");
+            throw new MedException("Appointment not found");
+        }
+
+        if(appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new MedException("Appointment already cancelled");
         }
 
         appointment.setStatus(AppointmentStatus.CANCELLED);
-        appointment.setLastUpdatedAt(LocalDate.now());
+        appointment.setLastUpdatedAt(LocalDateTime.now());
         entityManager.merge(appointment);
-
-        UserModel doctor = new UserModel(appointment.getDoctor());
-        UserModel patient = new UserModel(appointment.getPatient());
-
-        AppointmentModel appointmentModel = new AppointmentModel(appointment.getId(), patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
-                appointment.getCreatedAt(),appointment.getLastUpdatedAt());
 
         return new CreateUpdateAppointmentResponse(appointment);
     }
@@ -152,10 +163,29 @@ public class CustomAppointmentRepositoryImpl implements CustomAppointmentReposit
     }
 
     @Override
-    public List<AppointmentModel> getAppointmentsByPatientId(@PathVariable Long id) {
+    public List<AppointmentModel> getAppointmentsByPatientId(Long id) {
         Query query = entityManager.createQuery("select a from Appointment a where a.patient.id = :patient_id", Appointment.class);
         query.setParameter("patient_id", id);
         List<Appointment> appointmentList = query.getResultList();
+        List<AppointmentModel> appointmentModelList = new ArrayList<>();
+
+        for (Appointment appointment : appointmentList) {
+            UserModel doctor = new UserModel(appointment.getDoctor());
+            UserModel patient = new UserModel(appointment.getPatient());
+
+            appointmentModelList.add(new AppointmentModel(appointment.getId(), patient, doctor, appointment.getStatus(), appointment.getAppointmentDate(),
+                    appointment.getCreatedAt(),appointment.getLastUpdatedAt()));
+        }
+
+        return appointmentModelList;
+    }
+
+    @Override
+    public List<AppointmentModel> getAllAppointmentsByAppointmentDate(LocalDateTime appointmentDateStart, LocalDateTime appointmentDateEnd) {
+        Query query = entityManager.createQuery("select a from Appointment a where a.appointmentDate BETWEEN :start AND :end", Appointment.class);
+        query.setParameter("start", appointmentDateStart);
+        query.setParameter("end", appointmentDateEnd);
+        List<Appointment> appointmentList = query.getResultList() != null ? query.getResultList() : new ArrayList<>();
         List<AppointmentModel> appointmentModelList = new ArrayList<>();
 
         for (Appointment appointment : appointmentList) {

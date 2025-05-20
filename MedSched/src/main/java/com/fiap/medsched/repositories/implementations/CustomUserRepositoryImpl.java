@@ -4,6 +4,7 @@ import com.fiap.medsched.dtos.CreateUpdateUserRequest;
 import com.fiap.medsched.dtos.CreateUpdateUserResponse;
 import com.fiap.medsched.entities.Users;
 import com.fiap.medsched.enums.UserType;
+import com.fiap.medsched.exceptions.MedException;
 import com.fiap.medsched.models.UserModel;
 import com.fiap.medsched.repositories.CustomUserRepository;
 import jakarta.persistence.EntityManager;
@@ -37,7 +38,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         Users user = entityManager.find(Users.class, request.getId());
 
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new MedException("User not found");
         }
 
         user.setName(request.getName());
@@ -52,11 +53,11 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     @Override
     @Transactional
-    public UserModel getUserById(Long id){
+    public UserModel getUserById(Long id) {
         Users user = entityManager.find(Users.class, id);
 
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new MedException("User not found");
         }
 
         return new UserModel(user);
@@ -81,7 +82,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         Users user = entityManager.find(Users.class, id);
 
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new MedException("User not found");
         }
 
         entityManager.remove(user);

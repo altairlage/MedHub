@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table
@@ -26,15 +26,15 @@ public class Appointment {
     @OneToOne(cascade = CascadeType.PERSIST)
     private Users doctor;
 
-    private LocalDate appointmentDate;
+    private LocalDateTime appointmentDate;
 
     private AppointmentStatus status;
 
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
-    private LocalDate lastUpdatedAt;
+    private LocalDateTime lastUpdatedAt;
 
-    public Appointment(Users patient, Users doctor, LocalDate appointmentDate, AppointmentStatus status, LocalDate createdAt, LocalDate lastUpdatedAt) {
+    public Appointment(Users patient, Users doctor, LocalDateTime appointmentDate, AppointmentStatus status, LocalDateTime createdAt, LocalDateTime lastUpdatedAt) {
         this.patient = patient;
         this.doctor = doctor;
         this.appointmentDate = appointmentDate;

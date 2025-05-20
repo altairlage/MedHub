@@ -3,6 +3,7 @@ input CreateUpdateAppointmentRequest {
     patientId: ID!
     doctorId: ID!
     appointmentDate: String!
+    appointmentHour: String!
 }
 
 type CreateUpdateAppointmentResponse {
@@ -31,7 +32,7 @@ type Appointment {
 
 extend type Query {
     getAllAppointments:[Appointment!]!
-    getAllScheduledAppointmentByDate(appointmentDate: String!): [Appointment!]!
+    getAllAppointmentByDate(appointmentDate: String!): [Appointment!]
     getAllAppointmentByPatientId(patientId: ID!): [Appointment!]!
     getAllAppointmentByDoctorId(doctorId: ID!): [Appointment!]!
     getAppointmentById(appointmentId: ID!): Appointment!
