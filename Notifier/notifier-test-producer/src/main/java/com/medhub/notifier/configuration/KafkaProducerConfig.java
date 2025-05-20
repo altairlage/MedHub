@@ -1,9 +1,8 @@
 package com.medhub.notifier.configuration;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.medhub.notifier.dto.SendScheduleNotification;
+import com.medhub.notifier.dto.ScheduleNotification;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -23,7 +22,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class KafkaConsumerConfig {
+public class KafkaProducerConfig {
     // Faz usar o nome do serviço definido no docker-compose.yml e que 
     // localhost:9092 só será usado em ambiente local fora do container.
     @Value("${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}")
@@ -40,12 +39,12 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, SendScheduleNotification> producerFactory() {
+    public ProducerFactory<String, ScheduleNotification> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, SendScheduleNotification> kafkaTemplate() {
+    public KafkaTemplate<String, ScheduleNotification> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
@@ -56,7 +55,6 @@ public class KafkaConsumerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         // Para consumir todas as mensagens da fila, nao somente as mensagens criadas apos a criação do consumer
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         // grupo de consumo
@@ -66,25 +64,23 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, SendScheduleNotification> consumerFactory() {
-        ObjectMapper objectMapper = new ObjectMapper()
-                .registerModule(new JavaTimeModule())
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        JsonDeserializer<SendScheduleNotification> deserializer = new JsonDeserializer<>(SendScheduleNotification.class, objectMapper);
+    public ConsumerFactory<String, ScheduleNotification> consumerFactory() {
+        JsonDeserializer<ScheduleNotification> deserializer = new JsonDeserializer<>(ScheduleNotification.class);
+        deserializer.setRemoveTypeHeaders(false);
         deserializer.addTrustedPackages("*");
-        deserializer.setUseTypeHeaders(false);
+        deserializer.setUseTypeMapperForKey(false);
 
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfigs(),
                 new StringDeserializer(),
                 deserializer
         );
+
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, SendScheduleNotification> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, SendScheduleNotification> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, ScheduleNotification> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, ScheduleNotification> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
 
         // Para informar corretamente ao kafka que as mensagens foram processadas
