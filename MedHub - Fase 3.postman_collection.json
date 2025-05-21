@@ -1,0 +1,460 @@
+{
+	"info": {
+		"_postman_id": "0222a91a-d967-4b15-b042-405fb3fd0ecb",
+		"name": "MedHub - Fase 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8464153"
+	},
+	"item": [
+		{
+			"name": "Criar Usuário Paciente",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CreateUser {\r\n    createUser(\r\n        request: {\r\n            name: \"Joao\"\r\n            surname: \"Paciente\"\r\n            email: \"joaopaciente@email.com\"\r\n            userType: PATIENT\r\n        }\r\n    ) {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Usuário Médico",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CreateUser {\r\n    createUser(\r\n        request: {\r\n            name: \"Maria\"\r\n            surname: \"Médica\"\r\n            email: \"mariamedica@email.com\"\r\n            userType: DOCTOR\r\n        }\r\n    ) {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Usuário Enfermeiro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CreateUser {\r\n    createUser(\r\n        request: {\r\n            name: \"Anastacia\"\r\n            surname: \"Enfermeira\"\r\n            email: \"anastaciaenfermeira@email.com\"\r\n            userType: NURSE\r\n        }\r\n    ) {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar Usuário",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation UpdateUser {\r\n    updateUser(\r\n        request: {\r\n            id: \"1\"\r\n            name: \"João\"\r\n            surname: \"Patient\"\r\n            email: \"joaopaciente@email.com\"\r\n            userType: PATIENT\r\n        }\r\n    ) {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluir Usuário",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation DeleteUser {\r\n    deleteUser(userId: \"3\")\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Pacientes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllUsersByUserType {\r\n    getAllUsersByUserType(userType: PATIENT) {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Médicos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllUsersByUserType {\r\n    getAllUsersByUserType(userType: DOCTOR) {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Enfermeiros",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllUsersByUserType {\r\n    getAllUsersByUserType(userType: NURSE) {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Usuários",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllUsers {\r\n    getAllUsers {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Usuário pelo ID",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetUserById {\r\n    getUserById(userId: \"3\") {\r\n        id\r\n        name\r\n        surname\r\n        email\r\n        userType\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Agendamento",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CreateAppointment {\r\n    createAppointment(\r\n        request: {\r\n            patientId: \"1\"\r\n            doctorId: \"2\"\r\n            appointmentDate: \"15/05/2025\"\r\n            appointmentHour: \"14h00\"\r\n        }\r\n    ) {\r\n        id\r\n        appointmentDate\r\n        appointmentStatus\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar Agendamento",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation UpdateAppointment {\r\n    updateAppointment(\r\n        request: {\r\n            id: \"1\"\r\n            patientId: \"1\"\r\n            doctorId: \"2\"\r\n            appointmentDate: \"20/05/2025\"\r\n            appointmentHour: \"15H30\"\r\n        }\r\n    ) {\r\n        id\r\n        appointmentDate\r\n        appointmentStatus\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancelar Agendamento",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CancelAppointment {\r\n    cancelAppointment(appointmentId: \"1\") {\r\n        id\r\n        appointmentDate\r\n        appointmentStatus\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Agendamentos de um Paciente",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllAppointmentByPatientId {\r\n    getAllAppointmentByPatientId(patientId: \"1\") {\r\n        id\r\n        appointmentDate\r\n        status\r\n        createdAt\r\n        lastUpdatedAt\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Agendamentos de um Médico",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllAppointmentByDoctorId {\r\n    getAllAppointmentByDoctorId(doctorId: \"2\") {\r\n        id\r\n        appointmentDate\r\n        status\r\n        createdAt\r\n        lastUpdatedAt\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Agendamentos de uma Data",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllAppointmentByDate {\r\n    getAllAppointmentByDate(appointmentDate: \"20/05/2025\") {\r\n        id\r\n        appointmentDate\r\n        status\r\n        createdAt\r\n        lastUpdatedAt\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Todos os Agendamentos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAllAppointments {\r\n    getAllAppointments {\r\n        id\r\n        appointmentDate\r\n        status\r\n        createdAt\r\n        lastUpdatedAt\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Recuperar Agendamentos pelo ID",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetAppointmentById {\r\n    getAppointmentById(appointmentId: \"1\") {\r\n        id\r\n        appointmentDate\r\n        status\r\n        createdAt\r\n        lastUpdatedAt\r\n        patient {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n        doctor {\r\n            id\r\n            name\r\n            surname\r\n            email\r\n            userType\r\n        }\r\n    }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

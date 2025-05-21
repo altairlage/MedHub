@@ -27,8 +27,8 @@ public class CreateUpdateAppointmentResponse {
 
 
         setId(appointment.getId());
-        setDoctor(patient);
-        setPatient(doctor);
+        setDoctor(doctor);
+        setPatient(patient);
         setAppointmentDate(appointment.getAppointmentDate().toString());
         setAppointmentStatus(appointment.getStatus());
     }
