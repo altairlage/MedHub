@@ -33,72 +33,41 @@ O `notifier-service` é responsável por:
 
 # Estrutura do Projeto
 
-- **notifier-service**: Serviço que consome mensagens do Kafka referentes a agendamentos.
-- **notifier-test-producer**: Projeto auxiliar que envia mensagens de teste ao Kafka.
+- **medsched**: Serviço de agendamento que produz mensagens no tópico Kafka.
+- **notifier-service**: Serviço que consome mensagens do Kafka referentes a agendamentos e envia as notificações via email.
 
+## Como Executar o Projeto
 
-## Notifier-Service
+### Pré-requisitos
 
+- **Docker** e **Docker Compose** instalados.
+- **Java 21** ou superior.
+- **Maven** instalado.
 
-### Como Executar o Notifier-Service
+### Passos para Execução
 
-#### 1. Subir o Apache Kafka com Docker
+#### 1. Subir os Serviços com Docker Compose
 
-```bash
-# Baixar e rodar o container Kafka
-docker run --name medhub-schedule -p 9092:9092 -d -t apache/kafka:latest
-
-# Acessar o container
-docker exec -it medhub-schedule bash
-
-# Criar o tópico "schedule-notification"
-./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic schedule-notification
-```
-
-#### 2. Executar o Notifier Service
-
-- Abra o projeto `notifier-service` no IntelliJ IDEA.
-- Execute a aplicação (`NotifierServiceApplication`).
-- O Listener Kafka ficará aguardando mensagens no tópico `schedule-notification`.
-
-#### 3. Executar o Producer de Testes
-
-- Abra o projeto `notifier-test-producer` no IntelliJ IDEA.
-- Execute a aplicação (`NotifierTestProducerApplication`).
-- Esta aplicação gerará 10 mensagens de exemplo no tópico `schedule-notification`.
-
-#### 4. Verificar o Consumo
-
-- Verifique o console do `notifier-service`.
-- As mensagens serão lidas, deserializadas e logadas como objetos `ScheduleNotification`.
-
-#### 5. Finalizar o Ambiente
+No diretório raiz do projeto, execute:
 
 ```bash
-# Parar o container Kafka
-docker container stop medhub-schedule
-
-# Remover o container Kafka
-docker container rm medhub-schedule
+docker-compose up --build
 ```
 
-### Comandos Docker Utilizados
+#### 2. Verificar o Consumo
+
+No diretório raiz do projeto, execute:
 
 ```bash
-# Subir o container Kafka
-docker run --name medhub-schedule -p 9092:9092 -d -t apache/kafka:latest
-
-# Entrar no container
-docker exec -it medhub-schedule bash
-
-# Criar tópico Kafka
-./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic schedule-notification
-
-# Parar e remover container
-docker container stop medhub-schedule
-docker container rm medhub-schedule
+docker-compose logs -f 
 ```
 
----
+#### 3. Finalizar o Ambiente
+
+No diretório raiz do projeto, execute:
+
+```bash
+docker-compose down -v  
+```
 
 _Desenvolvido para a pós-graduação em Engenharia de Software — Fase 3 do Tech Challenge._

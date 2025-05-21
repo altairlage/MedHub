@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   medhub-kafka:
     image: apache/kafka:latest
